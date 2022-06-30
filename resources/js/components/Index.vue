@@ -46,7 +46,12 @@
                 })
                 this.title = ''
                 data.append('title', this.title)
+
                 axios.post('/api/posts', data)
+                    .then(res => {
+                        this.getPost()
+                    })
+
             },
 
             getPost() {
