@@ -3,6 +3,13 @@
         <input v-model='title' type="text" class="mb-3 form-control" placeholder="title">
         <div ref="dropzone" class="mb-3 btn d-block p-5 bg-dark text-center text-light">Upload</div>
         <input @click.prevent="store" type="submit" class="btn btn-primary" value="add">
+
+        <div class="mt-5" v-if="post">
+            <h4>{{ post.title }}</h4>
+            <div v-for="image in post.images" class="mb-3">
+                <img :src="image.url" width="300">
+            </div>
+        </div>
     </div>
 </template>
 
@@ -15,7 +22,8 @@
         data() {
             return {
                 dropzone: null,
-                title: ''
+                title: '',
+                post: null
             }
         },
 
@@ -25,6 +33,7 @@
                 autoProcessQueue: false,
                 addRemoveLinks: true
             })
+            this.getPost()
         },
 
         methods: {
@@ -38,6 +47,13 @@
                 this.title = ''
                 data.append('title', this.title)
                 axios.post('/api/posts', data)
+            },
+
+            getPost() {
+                axios.get('/api/posts')
+                    .then(res => {
+                        this.post = res.data.data
+                    })
             }
         }
     }
