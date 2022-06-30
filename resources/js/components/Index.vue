@@ -33,7 +33,9 @@
                 const files = this.dropzone.getAcceptedFiles()
                 files.forEach(file => {
                     data.append('images[]', file)
+                    this.dropzone.removeFile(file)
                 })
+                this.title = ''
                 data.append('title', this.title)
                 axios.post('/api/posts', data)
             }

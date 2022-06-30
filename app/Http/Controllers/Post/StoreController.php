@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\StoreRequest;
+use App\Models\Image;
 use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,8 +23,14 @@ class StoreController extends Controller
         foreach ($images as $image) {
             $name = md5(Carbon::now() . '_' . $image->getClientOriginalName()) . '.' . $image->getClientOriginalExtension();
             $filePath = Storage::disk('public')->putFileAs('/images', $image, $name);
+
+            Image::create([
+                'path' => $filePath,
+                'url' => url('/storage/' . $filePath),
+                'post_id' => $post->id
+            ]);
         }
 
-        return view('index');
+        return response()->json(['message' => 'success']);
     }
 }
